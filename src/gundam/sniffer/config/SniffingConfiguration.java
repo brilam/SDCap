@@ -1,5 +1,9 @@
 package gundam.sniffer.config;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import org.pcap4j.core.PcapAddress;
 import org.pcap4j.core.PcapNetworkInterface;
 
 /**
@@ -10,6 +14,7 @@ import org.pcap4j.core.PcapNetworkInterface;
 public class SniffingConfiguration {
   private PcapNetworkInterface device = null;
   private int port;
+  private List<InetAddress> localAddrs = new ArrayList<>();
 
   /**
    * 
@@ -18,7 +23,18 @@ public class SniffingConfiguration {
    */
   private SniffingConfiguration(PcapNetworkInterface device, int port) {
     this.device = device;
+    setLocalAddrs(device);
     this.port = port;
+  }
+  
+  public void setLocalAddrs(PcapNetworkInterface device) {
+    for (PcapAddress pcapAddr : device.getAddresses()) {
+      localAddrs.add(pcapAddr.getAddress());
+    }
+  }
+  
+  public List<InetAddress> getLocalAddrs() {
+    return localAddrs;
   }
 
   /**
