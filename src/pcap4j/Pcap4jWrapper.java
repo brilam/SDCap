@@ -17,7 +17,6 @@ public class Pcap4jWrapper {
 
   /**
    * Loads all the network devices to sniff packets from.
-   * @return all the network devices to sniff packets from
    * @throws IOException if an error occurs in the pcaps native library
    */
   public static void loadAllDevices() throws IOException {

@@ -1,32 +1,33 @@
 package gundam.sniffer;
 
+import gundam.sniffer.config.SniffingConfiguration;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
-import org.pcap4j.util.ByteArrays;
-import gundam.sniffer.config.SniffingConfiguration;
 
 /**
- * This class represents the Gundam sniffer.
+ * This class represents the Gundam packet sniffing functionality (ie.
+ * logging the packets).
  */
 public class GundamSniffer {
   private SniffingConfiguration sc;
   private static final int SNAPSHOT_LENGTH = 65536;
   private static final int READ_TIMEOUT = 50;
   private static final int LOOP_INFINITY = -1;
+  private static final GundamPacketFactory GUNDAM_PACKET_FACTORY = new GundamPacketFactory();
 
   /**
    * Create a GundamSniffer object which allows us to start sniffing for packets.
-   * @param sc
+   * @param sc the SniffingConfiguration for this sniffer
    */
   public GundamSniffer(SniffingConfiguration sc) {
     this.sc = sc;
@@ -39,7 +40,8 @@ public class GundamSniffer {
    * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()
    * @throws UnknownHostException if the address of localhost cannot be resolved
    */
-  public void startSniffing() throws PcapNativeException, NotOpenException, InterruptedException, UnknownHostException {
+  public void startSniffing()
+      throws PcapNativeException, NotOpenException, InterruptedException, UnknownHostException {
     final PcapHandle handle;
     PcapNetworkInterface device = sc.getDevice();
     int port = sc.getPort();
@@ -56,16 +58,10 @@ public class GundamSniffer {
         if (tcpPacket != null) {
           if (tcpPacket.getPayload() != null) {
             Inet4Address srcAddr = ipv4.getHeader().getSrcAddr();
-            String type = "";
-            if (sc.getLocalAddrs().contains(srcAddr)) {
-              type += "Outbound";
-            } else {
-              type += "Inbound";
-            }
-            System.out.println("Packet Type: " + type);
-            System.out.println("Length: " + tcpPacket.getPayload().getRawData().length);
-            String packetDataHexString = ByteArrays.toHexString(tcpPacket.getPayload().getRawData(), " ").toUpperCase();
-            System.out.printf("Data: %s\n\n", packetDataHexString);
+            boolean isOutbound = sc.getLocalAddrs().contains(srcAddr);
+            GundamPacket gundamPacket =
+                GUNDAM_PACKET_FACTORY.createPacket(handle, tcpPacket, isOutbound);
+            System.out.println(gundamPacket);
           }
         }
       }

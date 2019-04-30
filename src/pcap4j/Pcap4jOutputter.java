@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import org.pcap4j.core.PcapNetworkInterface;
 
+/**
+ * This class is used to output Pcap4j relevant information. 
+ * @author Brian
+ */
 public class Pcap4jOutputter {
-    private static final int NO_DEVICES_ERROR_CODE = 1;
+  private static final int NO_DEVICES_ERROR_CODE = 1;
   
   /**
-   * Prints out all the device names (they are technically descriptions according to Pcap), but it
+   * Prints out all the device names (they are technically descriptions according to pcap4j), but it
    * is easier to identify these then the actual device numbers.
    * @throws IOException if an error occurs in the pcaps native library
    */

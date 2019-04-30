@@ -17,9 +17,9 @@ public class SniffingConfiguration {
   private List<InetAddress> localAddrs = new ArrayList<>();
 
   /**
-   * 
-   * @param device
-   * @param port
+   * Creates a SniffingConfiguration with the given device and port.
+   * @param device the device for which packets will be sniffed
+   * @param port the port that packets are sniffed from
    */
   private SniffingConfiguration(PcapNetworkInterface device, int port) {
     this.device = device;
@@ -27,12 +27,20 @@ public class SniffingConfiguration {
     this.port = port;
   }
   
+  /**
+   * Sets the local addresses of the network device.
+   * @param device the network device
+   */
   public void setLocalAddrs(PcapNetworkInterface device) {
     for (PcapAddress pcapAddr : device.getAddresses()) {
       localAddrs.add(pcapAddr.getAddress());
     }
   }
   
+  /**
+   * Returns the list of local addresses for the network device.
+   * @return the list of local addresses for the network device
+   */
   public List<InetAddress> getLocalAddrs() {
     return localAddrs;
   }
@@ -73,7 +81,7 @@ public class SniffingConfiguration {
     
     /**
      * Sets the port.
-     * @param device the device to set
+     * @param port the port to sniff
      * @return SniffingConfigurationBuilder object with the set sniffing device
      */
     public SniffingConfigurationBuilder setPort(int port) {

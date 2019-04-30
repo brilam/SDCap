@@ -1,15 +1,23 @@
 package gundam.sniffer;
 
+import gundam.sniffer.config.SniffingConfiguration;
+import gundam.sniffer.output.UserPrompter;
 import java.io.IOException;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
-import gundam.sniffer.config.SniffingConfiguration;
-import gundam.sniffer.output.UserPrompter;
 import pcap4j.Pcap4jOutputter;
 import pcap4j.Pcap4jWrapper;
 
+/**
+ * This class is used to run the GundamSniffer in command line interface (CLI) mode.
+ * @author Brian
+ */
 public class Driver {
+  /**
+   * Used to run the command line interface version of GundamSniffer.
+   * @param args no arguments required
+   */
   public static void main(String[] args) {
     try {
       Pcap4jWrapper.loadAllDevices();
