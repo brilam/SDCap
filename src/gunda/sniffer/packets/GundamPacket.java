@@ -1,4 +1,4 @@
-package gundam.sniffer;
+package gunda.sniffer.packets;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -10,7 +10,8 @@ import org.pcap4j.util.ByteArrays;
  * This class represents a Gundam packet. A Gundam packet is not encrypted (at
  * least as seen in the Chinese locale of the game). The packet is a TCP packet
  * sent over IPv4 Protocol. The first short (two bytes) of the packet is known as 
- * the "opcode", and the bytes after the opcode are the packet data.
+ * the "opcode", and the bytes after the opcode are the packet data. The byte ordering
+ * is Little Endian.
  * @author Brian
  */
 public abstract class GundamPacket {
@@ -59,10 +60,22 @@ public abstract class GundamPacket {
    * in SD Gundam Online.
    * @return the opcode of the packet
    */
-  public final String getOpcode() {
+  public final byte[] getOpcode() {
     byte[] packetData = tcpPacket.getPayload().getRawData();
-    byte[] opcode = Arrays.copyOfRange(packetData, 0, 2); 
-    return ByteArrays.toHexString(opcode, " ").toUpperCase();
+    byte[] opcode = Arrays.copyOfRange(packetData, 0, 2);
+    return opcode;
+  }
+  
+  /**
+   * Returns the reversed opcode array (the opcode is always two bytes).
+   * @param opcode the array representing the two byte opcode
+   * @return the reversed opcode array
+   */
+  private byte[] reverseOpcodeArray(byte[] opcode) {
+    byte originalByte = opcode[0];
+    opcode[0] = opcode[1];
+    opcode[1] = originalByte;
+    return opcode;
   }
   
   /**
@@ -70,13 +83,15 @@ public abstract class GundamPacket {
    * after the opcode.
    * @return the packet data of the packet
    */
-  public final String getData() {
+  public final byte[] getData() {
     byte[] originalData = tcpPacket.getPayload().getRawData();
+    // If there is more than two bytes, it is everything after the first two bytes
     if (originalData.length > 2) {
-      byte[] packetData = Arrays.copyOfRange(originalData, 2, originalData.length); 
-      return ByteArrays.toHexString(packetData, " ").toUpperCase();
+      byte[] packetData = Arrays.copyOfRange(originalData, 2, originalData.length);
+      return packetData;
     }
-    return "";
+    // Empty byte array if there is no data
+    return new byte[0];
   }
   
   /**
@@ -87,8 +102,13 @@ public abstract class GundamPacket {
     String message = "Timestamp: " + getTimestamp();
     message += "\nPacket Direction: " + getDirection();
     message += "\nLength: " + getLength();
-    message += "\nOpcode: " + getOpcode();
-    message += "\nData: " + getData();
+    byte[] opcode = getOpcode();
+    opcode = reverseOpcodeArray(opcode);
+    String opcodeHexString = ByteArrays.toHexString(opcode, "").toUpperCase();
+    message += "\nOpcode: 0x" + opcodeHexString;
+    byte[] packetData = getData();
+    String packetDataHexString = ByteArrays.toHexString(packetData, " ").toUpperCase();
+    message += "\nData: " + packetDataHexString;
     message += "\n";
     return message;
   }

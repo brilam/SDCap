@@ -1,4 +1,4 @@
-package gundam.sniffer;
+package gunda.sniffer.packets;
 
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.packet.TcpPacket;
