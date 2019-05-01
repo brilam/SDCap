@@ -36,21 +36,23 @@ public class SDCap {
 
   /**
    * Create the application.
-   * @throws UnsupportedLookAndFeelException 
-   * @throws IllegalAccessException 
-   * @throws InstantiationException 
-   * @throws ClassNotFoundException 
+   * 
+   * @throws UnsupportedLookAndFeelException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException
    */
-  public SDCap() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+  public SDCap() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+      UnsupportedLookAndFeelException {
     initialize();
   }
-  
+
   private void createFrame() {
     frame = new JFrame("SDCap - Gundam Sniffer");
     frame.setBounds(100, 100, 599, 475);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
-  
+
   private JMenuBar createMenu() {
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("File");
@@ -64,48 +66,42 @@ public class SDCap {
 
   /**
    * Initialize the contents of the frame.
-   * @throws UnsupportedLookAndFeelException 
-   * @throws IllegalAccessException 
-   * @throws InstantiationException 
-   * @throws ClassNotFoundException 
+   * 
+   * @throws UnsupportedLookAndFeelException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException
    */
-  private void initialize() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+  private void initialize() throws ClassNotFoundException, InstantiationException,
+      IllegalAccessException, UnsupportedLookAndFeelException {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     createFrame();
     JMenuBar menuBar = createMenu();
     frame.setJMenuBar(menuBar);
     frame.getContentPane().setLayout(null);
-    
+
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.setBounds(0, 22, 573, 221);
     frame.getContentPane().add(scrollPane);
 
-    
-    Object[][] data = {
-        {"2019-04-27", "Inbound",
-          "12", "0x0A", "KEEP_ALIVE"},        
-        {"2019-04-27", "Inbound",
-           "12", "0x0A", "KEEP_ALIVE"}
-    };
-    
-    String[] columnNames = {"Timestamp",
-        "Direction",
-        "Packet Length",
-        "Opcode",
-        "Opcode Name"};
-    
+
+    Object[][] data = {{"2019-04-27", "Inbound", "12", "0x0A", "KEEP_ALIVE"},
+        {"2019-04-27", "Inbound", "12", "0x0A", "KEEP_ALIVE"}};
+
+    String[] columnNames = {"Timestamp", "Direction", "Packet Length", "Opcode", "Opcode Name"};
+
     table = new JTable(data, columnNames);
     table.setShowGrid(false);
     scrollPane.setViewportView(table);
-    
+
     JComboBox comboBox = new JComboBox();
     comboBox.setBounds(0, 0, 573, 20);
     frame.getContentPane().add(comboBox);
-    
+
     JLabel lblPacketData = new JLabel("Packet Data");
     lblPacketData.setBounds(10, 251, 58, 20);
     frame.getContentPane().add(lblPacketData);
-    
+
     TextArea textArea = new TextArea();
     textArea.setBounds(10, 276, 563, 129);
     frame.getContentPane().add(textArea);

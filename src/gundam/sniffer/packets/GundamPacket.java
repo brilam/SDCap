@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Map;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.packet.TcpPacket;
-import org.pcap4j.util.ByteArrays;
 
 /**
  * This class represents a Gundam packet. A Gundam packet is not encrypted (at
@@ -19,6 +18,9 @@ public abstract class GundamPacket {
   private PcapHandle handle;
   private TcpPacket tcpPacket;
   private String packetDirection;
+  private static final int UNKNOWN_DATA_START_INDEX = 2;
+  private static final int OPCODE_START_INDEX = 4;
+  private static final int PACKET_DATA_START_INDEX = 6;
   
   /**
    * Creates a Gundam packet.
@@ -53,7 +55,13 @@ public abstract class GundamPacket {
    * @return the length of the packet
    */
   public final int getLength() {
-    return tcpPacket.getPayload().getRawData().length;
+    byte[] packetData = tcpPacket.getPayload().getRawData();
+    /* First two bytes of the packet represent the length of the packet
+       excluding the two bytes after the length */
+    byte[] packetLengthInHex = Arrays.copyOfRange(packetData, 0, UNKNOWN_DATA_START_INDEX);
+    packetLengthInHex = HexTool.reverseTwoByteArray(packetLengthInHex);
+    String hexString = HexTool.byteArrayToHexString(packetLengthInHex, false);
+    return Integer.parseInt(hexString, 16);
   }
   
   /**
@@ -63,20 +71,20 @@ public abstract class GundamPacket {
    */
   public final byte[] getOpcode() {
     byte[] packetData = tcpPacket.getPayload().getRawData();
-    byte[] opcode = Arrays.copyOfRange(packetData, 0, 2);
+    byte[] opcode = Arrays.copyOfRange(packetData, OPCODE_START_INDEX, PACKET_DATA_START_INDEX);
     return opcode;
   }
   
   /**
-   * Returns the reversed opcode array (the opcode is always two bytes).
-   * @param opcode the array representing the two byte opcode
-   * @return the reversed opcode array
+   * Returns the bytes in the packet representing the unknown data. The unknown data is
+   * the two bytes after the packet length.
+   * @return the bytes representing the unknown data
    */
-  private byte[] reverseOpcodeArray(byte[] opcode) {
-    byte originalByte = opcode[0];
-    opcode[0] = opcode[1];
-    opcode[1] = originalByte;
-    return opcode;
+  public final byte[] getUnknownData() {
+    byte[] originalData = tcpPacket.getPayload().getRawData();
+    byte[] unknownData =
+        Arrays.copyOfRange(originalData, UNKNOWN_DATA_START_INDEX, OPCODE_START_INDEX);
+    return unknownData;
   }
   
   /**
@@ -87,8 +95,9 @@ public abstract class GundamPacket {
   public final byte[] getData() {
     byte[] originalData = tcpPacket.getPayload().getRawData();
     // If there is more than two bytes, it is everything after the first two bytes
-    if (originalData.length > 2) {
-      byte[] packetData = Arrays.copyOfRange(originalData, 2, originalData.length);
+    if (originalData.length > PACKET_DATA_START_INDEX) {
+      byte[] packetData =
+          Arrays.copyOfRange(originalData, PACKET_DATA_START_INDEX, originalData.length);
       return packetData;
     }
     // Empty byte array if there is no data
@@ -103,10 +112,12 @@ public abstract class GundamPacket {
     String message = "Timestamp: " + getTimestamp();
     message += "\nPacket Direction: " + getDirection();
     message += "\nLength: " + getLength();
+    String unknownData = HexTool.byteArrayToHexString(getUnknownData(), true);
+    message += "\nUnknown Data: " + unknownData;
     Map<String, String> opcodes;
     byte[] opcode = getOpcode();
-    opcode = reverseOpcodeArray(opcode);
-    String opcodeHexString = ByteArrays.toHexString(opcode, "").toUpperCase();
+    opcode = HexTool.reverseTwoByteArray(opcode);
+    String opcodeHexString = HexTool.byteArrayToHexString(opcode, false);
     message += "\nOpcode: 0x" + opcodeHexString;
     if (packetDirection.equalsIgnoreCase("Inbound")) {
       opcodes = OpcodeDefinitions.getInboundOpcodes();
@@ -116,7 +127,7 @@ public abstract class GundamPacket {
     String opcodeName = OpcodeDefinitions.lookupOpcodeName("0x" + opcodeHexString, opcodes);
     message += "\nOpcode name: " + opcodeName;
     byte[] packetData = getData();
-    String packetDataHexString = ByteArrays.toHexString(packetData, " ").toUpperCase();
+    String packetDataHexString = HexTool.byteArrayToHexString(packetData, true);
     message += "\nData: " + packetDataHexString;
     message += "\n";
     return message;

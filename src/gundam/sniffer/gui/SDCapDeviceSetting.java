@@ -34,51 +34,56 @@ public class SDCapDeviceSetting {
 
   /**
    * Create the application.
-   * @throws UnsupportedLookAndFeelException 
-   * @throws IllegalAccessException 
-   * @throws InstantiationException 
-   * @throws ClassNotFoundException 
+   * 
+   * @throws UnsupportedLookAndFeelException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException
    */
-  public SDCapDeviceSetting() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+  public SDCapDeviceSetting() throws ClassNotFoundException, InstantiationException,
+      IllegalAccessException, UnsupportedLookAndFeelException {
     initialize();
   }
 
   /**
    * Initialize the contents of the frame.
+   * 
    * @throws UnsupportedLookAndFeelException if the look and feel doesn't exist
-   * @throws IllegalAccessException 
-   * @throws InstantiationException 
-   * @throws ClassNotFoundException 
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException
    */
-  private void initialize() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+  private void initialize() throws ClassNotFoundException, InstantiationException,
+      IllegalAccessException, UnsupportedLookAndFeelException {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
     frame = new JFrame("SDCap Settings");
     frame.setBounds(100, 100, 430, 181);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(null);
-    
+
     JLabel networkDeviceLabel = new JLabel("Network Device");
-    networkDeviceLabel.setToolTipText("Select the network device you wish to sniff from. Typically, this would be the device for Ethernet or Wifi.");
+    networkDeviceLabel.setToolTipText(
+        "Select the network device you wish to sniff from. "
+        + "Typically, this would be the device for Ethernet or Wifi.");
     networkDeviceLabel.setBounds(11, 11, 80, 14);
     frame.getContentPane().add(networkDeviceLabel);
-    
-    JComboBox packetsDropdown = new JComboBox();
+
+    JComboBox<String> packetsDropdown = new JComboBox<>();
     packetsDropdown.setBounds(11, 34, 394, 20);
     frame.getContentPane().add(packetsDropdown);
-    
+
     JButton okButton = new JButton("OK");
     okButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-      }
+      public void actionPerformed(ActionEvent arg0) {}
     });
     okButton.setBounds(325, 96, 80, 23);
     frame.getContentPane().add(okButton);
-    
+
     JLabel portLabel = new JLabel("Port");
     portLabel.setBounds(11, 62, 46, 14);
     frame.getContentPane().add(portLabel);
-    
+
     portTextField = new JTextField();
     portTextField.setBounds(11, 77, 86, 20);
     frame.getContentPane().add(portTextField);
