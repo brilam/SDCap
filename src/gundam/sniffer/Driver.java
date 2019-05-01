@@ -2,6 +2,7 @@ package gundam.sniffer;
 
 import gundam.sniffer.config.SniffingConfiguration;
 import gundam.sniffer.output.UserPrompter;
+import gundam.sniffer.packets.OpcodeDefinitions;
 import java.io.IOException;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
@@ -29,6 +30,7 @@ public class Driver {
           .setSniffingDevice(device)
           .setPort(portNumber).build();
       GundamSniffer gundamSniffer = new GundamSniffer(sc);
+      OpcodeDefinitions.loadPacketDefinitions();
       gundamSniffer.startSniffing();
     } catch (IOException | PcapNativeException | NotOpenException | InterruptedException e) {
       e.printStackTrace();

@@ -1,6 +1,8 @@
 package gundam.sniffer;
 
 import gundam.sniffer.config.SniffingConfiguration;
+import gundam.sniffer.packets.GundamPacket;
+import gundam.sniffer.packets.GundamPacketFactory;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
@@ -13,8 +15,6 @@ import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
-import gunda.sniffer.packets.GundamPacket;
-import gunda.sniffer.packets.GundamPacketFactory;
 
 /**
  * This class represents the Gundam packet sniffing functionality (ie.

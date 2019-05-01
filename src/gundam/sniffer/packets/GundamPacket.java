@@ -1,7 +1,8 @@
-package gunda.sniffer.packets;
+package gundam.sniffer.packets;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Map;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.util.ByteArrays;
@@ -102,10 +103,18 @@ public abstract class GundamPacket {
     String message = "Timestamp: " + getTimestamp();
     message += "\nPacket Direction: " + getDirection();
     message += "\nLength: " + getLength();
+    Map<String, String> opcodes;
     byte[] opcode = getOpcode();
     opcode = reverseOpcodeArray(opcode);
     String opcodeHexString = ByteArrays.toHexString(opcode, "").toUpperCase();
     message += "\nOpcode: 0x" + opcodeHexString;
+    if (packetDirection.equalsIgnoreCase("Inbound")) {
+      opcodes = OpcodeDefinitions.getInboundOpcodes();
+    } else {
+      opcodes = OpcodeDefinitions.getOutboundOpcodes();
+    }
+    String opcodeName = OpcodeDefinitions.lookupOpcodeName("0x" + opcodeHexString, opcodes);
+    message += "\nOpcode name: " + opcodeName;
     byte[] packetData = getData();
     String packetDataHexString = ByteArrays.toHexString(packetData, " ").toUpperCase();
     message += "\nData: " + packetDataHexString;
