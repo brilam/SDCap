@@ -1,5 +1,6 @@
 package gundam.sniffer.packets;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,13 +52,12 @@ public final class OpcodeDefinitions {
     return outboundOpcodes;
   }
   
-  public static void loadPacketDefinitions() {
-    // TODO: Actually load the packet definitions from a JSON file if it exists
-    inboundOpcodes.put("0x0639", "HANDSHAKE");
+  public static void loadPacketDefinitions() throws IOException {
+    OpcodeDefinitionIO.loadFromFile();
   }
   
-  public static void exportPacketDefinitions() {
-    // TODO: Write the packet definitions to the JSON file if it exists
+  public static void exportPacketDefinitions() throws IOException {
+    OpcodeDefinitionIO.writeToFile();
   }
   
   /**
