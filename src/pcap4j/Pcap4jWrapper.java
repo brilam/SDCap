@@ -14,6 +14,7 @@ import org.pcap4j.core.Pcaps;
  */
 public class Pcap4jWrapper {
   private static List<PcapNetworkInterface> allDevices;
+  private static String[] deviceNames;
 
   /**
    * Loads all the network devices to sniff packets from.
@@ -22,6 +23,7 @@ public class Pcap4jWrapper {
   public static void loadAllDevices() throws IOException {
     try {
       allDevices = Pcaps.findAllDevs();
+      populateDeviceNames();
     } catch (PcapNativeException e) {
       throw new IOException(e.getMessage());
     }
@@ -35,11 +37,27 @@ public class Pcap4jWrapper {
     return allDevices;
   }
   
+  public static String[] getDeviceNames() {
+    return deviceNames;
+  }
+  
   /**
    * Returns the number of devices there are to sniff from.
    * @return the number of devices there are to sniff from
    */
   public static int getNumOfDevices() {
     return getAllDevices().size();
+  }
+  
+  /**
+   * Populates the deviceNames arrays with the device names (they
+   * are technically device descriptions). 
+   */
+  private static void populateDeviceNames() {
+    deviceNames = new String[getNumOfDevices()];
+    for (int index = 0; index < getNumOfDevices(); index++) {
+      String deviceName = allDevices.get(index).getDescription();
+      deviceNames[index] = deviceName;
+    }
   }
 }
