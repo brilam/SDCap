@@ -129,6 +129,13 @@ public class SDCapDeviceSetting {
       PcapNetworkInterface device = Pcap4jWrapper.getAllDevices().get(deviceIndex);
       sc = new SniffingConfiguration.SniffingConfigurationBuilder().setSniffingDevice(device)
           .setPort(portNumber).build();
+      frame.dispose();
+      try {
+        new SDCap(sc);
+      } catch (Exception e) {
+        // Should never reach here since the look and feel will always be correct
+        e.printStackTrace();
+      }
     }
   }
 }
