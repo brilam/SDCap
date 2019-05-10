@@ -71,6 +71,7 @@ public class SDCapDeviceSetting {
     // Sets the frame
     frame = new JFrame("SDCap Settings");
     frame.setBounds(100, 100, 430, 181);
+    frame.setResizable(false);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setLayout(null);
 

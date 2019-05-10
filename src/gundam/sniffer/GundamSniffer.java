@@ -37,12 +37,13 @@ public class GundamSniffer {
 
   /**
    * Starts sniffing for Gundam packets.
+   * @param isGui whether or not the sniffer is running in GUI mode
    * @throws PcapNativeException if an error occurs in the pcap native library
    * @throws NotOpenException if the PcapHandle is not open
    * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()
    * @throws UnknownHostException if the address of localhost cannot be resolved
    */
-  public void startSniffing()
+  public void startSniffing(boolean isGui)
       throws PcapNativeException, NotOpenException, InterruptedException, UnknownHostException {
     final PcapHandle handle;
     PcapNetworkInterface device = sc.getDevice();
