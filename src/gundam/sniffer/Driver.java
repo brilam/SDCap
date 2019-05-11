@@ -31,7 +31,7 @@ public class Driver {
           .setPort(portNumber).build();
       GundamSniffer gundamSniffer = new GundamSniffer(sc);
       OpcodeDefinitions.loadPacketDefinitions();
-      gundamSniffer.startSniffing(false);
+      gundamSniffer.startSniffing();
     } catch (IOException | PcapNativeException | NotOpenException | InterruptedException e) {
       e.printStackTrace();
     }

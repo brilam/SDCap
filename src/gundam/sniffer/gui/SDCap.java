@@ -13,13 +13,15 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 
 public class SDCap {
 
   private JFrame frame;
   private JTable table;
   private JTextArea packetDataTextArea;
-  private JComboBox opcodeDropDown;
+  private JComboBox opcodesDropDown;
+  private GundamPacketTableModel model;
   
   /**
    * Create the application.
@@ -37,18 +39,19 @@ public class SDCap {
       // TODO: Log this out later!
       e.printStackTrace();
     }
-    Thread runSniffer = new Thread() {
+    // TODO: Worker thread instead
+    Thread snifferThread = new Thread() {
       public void run() {
         GundamSniffer gs = new GundamSniffer(sc);
         try {
-          gs.startSniffing(true);
+          gs.startSniffing(table, model);
         } catch (Exception e) {
           // TODO: Log this out later!
           e.printStackTrace();
         }
       }
     };
-    runSniffer.start();
+    snifferThread.start();
   }
 
   private void createFrame() {
@@ -90,14 +93,14 @@ public class SDCap {
     scrollPane.setBounds(0, 22, 573, 221);
     frame.getContentPane().add(scrollPane);
     
-    table = new JTable();
-    table.setModel(new GundamPacketTableModel());
+    model = new GundamPacketTableModel();
+    table = new JTable(model);
     table.setShowGrid(false);
     scrollPane.setViewportView(table);
 
-    opcodeDropDown = new JComboBox();
-    opcodeDropDown.setBounds(0, 0, 573, 20);
-    frame.getContentPane().add(opcodeDropDown);
+    opcodesDropDown = new JComboBox();
+    opcodesDropDown.setBounds(0, 0, 573, 20);
+    frame.getContentPane().add(opcodesDropDown);
 
     JLabel lblPacketData = new JLabel("Packet Data");
     lblPacketData.setBounds(10, 251, 58, 20);

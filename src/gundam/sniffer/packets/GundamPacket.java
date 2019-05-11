@@ -117,8 +117,8 @@ public abstract class GundamPacket {
     Map<String, String> opcodes;
     byte[] opcode = getOpcode();
     opcode = HexTool.reverseTwoByteArray(opcode);
-    String opcodeHexString = HexTool.byteArrayToHexString(opcode, false);
-    message += "\nOpcode: 0x" + opcodeHexString;
+    String opcodeHexString = "0x" + HexTool.byteArrayToHexString(opcode, false);
+    message += "\nOpcode: " + opcodeHexString;
     if (packetDirection.equalsIgnoreCase("Inbound")) {
       opcodes = OpcodeDefinitions.getInboundOpcodes();
     } else {

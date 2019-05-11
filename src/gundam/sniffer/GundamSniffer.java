@@ -1,10 +1,14 @@
 package gundam.sniffer;
 
 import gundam.sniffer.config.SniffingConfiguration;
+import gundam.sniffer.gui.GundamPacketTableModel;
 import gundam.sniffer.packets.GundamPacket;
 import gundam.sniffer.packets.GundamPacketFactory;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;
@@ -37,13 +41,12 @@ public class GundamSniffer {
 
   /**
    * Starts sniffing for Gundam packets.
-   * @param isGui whether or not the sniffer is running in GUI mode
    * @throws PcapNativeException if an error occurs in the pcap native library
    * @throws NotOpenException if the PcapHandle is not open
    * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()
    * @throws UnknownHostException if the address of localhost cannot be resolved
    */
-  public void startSniffing(boolean isGui)
+  public void startSniffing()
       throws PcapNativeException, NotOpenException, InterruptedException, UnknownHostException {
     final PcapHandle handle;
     PcapNetworkInterface device = sc.getDevice();
@@ -51,7 +54,7 @@ public class GundamSniffer {
     handle = device.openLive(SNAPSHOT_LENGTH, PromiscuousMode.PROMISCUOUS, READ_TIMEOUT);
     String filter = "tcp port " + port;
     handle.setFilter(filter, BpfCompileMode.OPTIMIZE);
-    
+
     PacketListener listener = new PacketListener() {
 
       @Override
@@ -65,6 +68,42 @@ public class GundamSniffer {
             GundamPacket gundamPacket =
                 GUNDAM_PACKET_FACTORY.createPacket(handle, tcpPacket, isOutbound);
             System.out.println(gundamPacket);
+          }
+        }
+      }
+    };
+    handle.loop(LOOP_INFINITY, listener);
+  }
+
+  /**
+   * Starts sniffing for Gundam packets.
+   * @throws PcapNativeException if an error occurs in the pcap native library
+   * @throws NotOpenException if the PcapHandle is not open
+   * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()
+   * @throws UnknownHostException if the address of localhost cannot be resolved
+   */
+  public void startSniffing(JTable table, GundamPacketTableModel gptm)
+      throws PcapNativeException, NotOpenException, InterruptedException, UnknownHostException {
+    final PcapHandle handle;
+    PcapNetworkInterface device = sc.getDevice();
+    int port = sc.getPort();
+    handle = device.openLive(SNAPSHOT_LENGTH, PromiscuousMode.PROMISCUOUS, READ_TIMEOUT);
+    String filter = "tcp port " + port;
+    handle.setFilter(filter, BpfCompileMode.OPTIMIZE);
+
+    PacketListener listener = new PacketListener() {
+
+      @Override
+      public void gotPacket(Packet packet) {
+        IpV4Packet ipv4 = packet.get(IpV4Packet.class);
+        TcpPacket tcpPacket = packet.get(TcpPacket.class);
+        if (tcpPacket != null) {
+          if (tcpPacket.getPayload() != null) {
+            Inet4Address srcAddr = ipv4.getHeader().getSrcAddr();
+            boolean isOutbound = sc.getLocalAddrs().contains(srcAddr);
+            GundamPacket gundamPacket =
+                GUNDAM_PACKET_FACTORY.createPacket(handle, tcpPacket, isOutbound);
+            gptm.addRow(gundamPacket);
           }
         }
       }
