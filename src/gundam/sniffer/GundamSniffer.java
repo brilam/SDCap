@@ -40,7 +40,7 @@ public class GundamSniffer {
   }
 
   /**
-   * Starts sniffing for Gundam packets.
+   * Starts sniffing for Gundam packets for CLI mode.
    * @throws PcapNativeException if an error occurs in the pcap native library
    * @throws NotOpenException if the PcapHandle is not open
    * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()
@@ -76,7 +76,7 @@ public class GundamSniffer {
   }
 
   /**
-   * Starts sniffing for Gundam packets.
+   * Starts sniffing for Gundam packets for GUI mode.
    * @throws PcapNativeException if an error occurs in the pcap native library
    * @throws NotOpenException if the PcapHandle is not open
    * @throws InterruptedException if the PcapHandle loop is terminated due to a call to breakLoop()

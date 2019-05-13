@@ -2,6 +2,9 @@ package gundam.sniffer.gui;
 
 import gundam.sniffer.GundamSniffer;
 import gundam.sniffer.config.SniffingConfiguration;
+import gundam.sniffer.packets.GundamPacket;
+import gundam.sniffer.packets.HexTool;
+import java.awt.event.MouseAdapter;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +16,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import com.sun.glass.events.MouseEvent;
 
 public class SDCap {
 
@@ -39,7 +45,8 @@ public class SDCap {
       // TODO: Log this out later!
       e.printStackTrace();
     }
-    // TODO: Worker thread instead
+    
+    // Spawn a thread used for capturing packets
     Thread snifferThread = new Thread() {
       public void run() {
         GundamSniffer gs = new GundamSniffer(sc);
@@ -93,10 +100,31 @@ public class SDCap {
     scrollPane.setBounds(0, 22, 573, 221);
     frame.getContentPane().add(scrollPane);
     
+    packetDataTextArea = new JTextArea();
+    packetDataTextArea.setEditable(false);
+    packetDataTextArea.setBounds(10, 276, 563, 129);
+    packetDataTextArea.setLineWrap(true);
+    frame.getContentPane().add(packetDataTextArea);
+    
     model = new GundamPacketTableModel();
     table = new JTable(model);
     table.setShowGrid(false);
     scrollPane.setViewportView(table);
+    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent arg0) {
+        int selectedRowIndex = table.getSelectedRow();
+        // If there is a row selected, show the packet data
+        if (selectedRowIndex >= -1) {
+          GundamPacket selectedPacket = model.getPacketLog().get(selectedRowIndex);
+          String[] packetInfo = selectedPacket.getPacketInformation();
+          // Remove the "Packet Data: " before the actual packet data and set the packetDataTextArea
+          String packetData = packetInfo[GundamPacket.PACKET_DATA_START_INDEX];
+          packetData = selectedPacket.removeColumnNameFromCell(packetData);
+          packetDataTextArea.setText(packetData);
+        }
+      }
+    });
 
     opcodesDropDown = new JComboBox();
     opcodesDropDown.setBounds(0, 0, 573, 20);
@@ -105,11 +133,5 @@ public class SDCap {
     JLabel lblPacketData = new JLabel("Packet Data");
     lblPacketData.setBounds(10, 251, 58, 20);
     frame.getContentPane().add(lblPacketData);
-
-    packetDataTextArea = new JTextArea();
-    packetDataTextArea.setEditable(false);
-    packetDataTextArea.setBounds(10, 276, 563, 129);
-    packetDataTextArea.setLineWrap(true);
-    frame.getContentPane().add(packetDataTextArea);
   }
 }

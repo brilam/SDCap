@@ -20,7 +20,7 @@ public abstract class GundamPacket {
   private String packetDirection;
   private static final int UNKNOWN_DATA_START_INDEX = 2;
   private static final int OPCODE_START_INDEX = 4;
-  private static final int PACKET_DATA_START_INDEX = 6;
+  public static final int PACKET_DATA_START_INDEX = 6;
   
   /**
    * Creates a Gundam packet.
@@ -131,5 +131,38 @@ public abstract class GundamPacket {
     message += "\nData: " + packetDataHexString;
     message += "\n";
     return message;
+  }
+  
+  /**
+   * Returns the packet information from toString() as a String array in the same order as the
+   * toString.
+   * @return the packet information from toString()
+   */
+  public String[] getPacketInformation() {
+    return toString().split("\n");
+  }
+  
+  /**
+   * Removes the column name from each element in the row data string. An example is
+   * removing Timestamp: from Timestamp: 2019-05-11 15:59:54.40052
+   * @param rowData the row data array
+   * @return the row data without any labels for each data
+   */
+  public String[] cleanRowData(String[] rowData) {
+    for (int index = 0; index < rowData.length; index++) {
+      rowData[index] = removeColumnNameFromCell(rowData[index]);
+    }
+    return rowData;
+  }
+  
+  /**
+   * Returns the packet information with the column name removed. 
+   * @param columnData the column data containing some packet information
+   * @return the packet information with the column name removed
+   */
+  public String removeColumnNameFromCell(String columnData) {
+    int dataIndex =  columnData.indexOf(":") + 2;
+    String cleanedData = columnData.substring(dataIndex);
+    return cleanedData;
   }
 }
