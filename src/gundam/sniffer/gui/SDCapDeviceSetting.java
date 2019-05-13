@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.pcap4j.core.PcapNetworkInterface;
 import gundam.sniffer.config.SniffingConfiguration;
+import gundam.sniffer.packets.OpcodeDefinitions;
 import pcap4j.Pcap4jWrapper;
 
 public class SDCapDeviceSetting {
@@ -132,6 +133,7 @@ public class SDCapDeviceSetting {
           .setPort(portNumber).build();
       frame.dispose();
       try {
+        OpcodeDefinitions.loadPacketDefinitions();
         new SDCap(sc);
       } catch (Exception e) {
         // Should never reach here since the look and feel will always be correct
