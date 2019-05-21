@@ -115,9 +115,10 @@ public abstract class GundamPacket {
     String unknownData = HexTool.byteArrayToHexString(getUnknownData(), true);
     message += "\nUnknown Data: " + unknownData;
     Map<String, String> opcodes;
-    byte[] opcode = getOpcode();
+    /*byte[] opcode = getOpcode();
     opcode = HexTool.reverseTwoByteArray(opcode);
-    String opcodeHexString = HexTool.byteArrayToHexString(opcode, false);
+    String opcodeHexString = HexTool.byteArrayToHexString(opcode, false);*/
+    String opcodeHexString = getOpcodeAsString();
     message += "\nOpcode: 0x" + opcodeHexString;
     if (packetDirection.equalsIgnoreCase("Inbound")) {
       opcodes = OpcodeDefinitions.getInboundOpcodes();
@@ -131,6 +132,13 @@ public abstract class GundamPacket {
     message += "\nData: " + packetDataHexString;
     message += "\n";
     return message;
+  }
+  
+  public String getOpcodeAsString() {
+    byte[] opcode = getOpcode();
+    opcode = HexTool.reverseTwoByteArray(opcode);
+    String opcodeHexString = HexTool.byteArrayToHexString(opcode, false);
+    return opcodeHexString;
   }
   
   /**

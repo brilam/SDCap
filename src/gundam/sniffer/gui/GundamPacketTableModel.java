@@ -1,9 +1,11 @@
 package gundam.sniffer.gui;
 
 import gundam.sniffer.packets.GundamPacket;
+import gundam.sniffer.packets.OpcodeDefinitions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 public class GundamPacketTableModel extends DefaultTableModel {
@@ -37,6 +39,36 @@ public class GundamPacketTableModel extends DefaultTableModel {
     }
     // Only opcode name should be editable
     return true;
+  }
+  
+  /**
+   * Sets the opcode name for the given opcode.
+   * @param value the opcode name
+   * @param opcode the opcode
+   */
+  private void setOpcodeNameAt(byte[] opcode, Object value) {
+    for (int index = 0; index < getPacketLog().size(); index++) {
+      GundamPacket packet = getPacketLog().get(index);
+      if (Arrays.equals(opcode, packet.getOpcode())) {
+        super.setValueAt(value, index, OPCODE_NAME_COL_INDEX);
+      }
+    }
+  }
+  
+  @Override
+  public void setValueAt(Object value, int row, int column) {
+    if (isCellEditable(row, column)) {
+      String opcodeName = (String) value;
+      GundamPacket editedPacket = getPacketLog().get(row);
+      String opcodeHexString =  editedPacket.getOpcodeAsString();
+
+      if (editedPacket.getDirection().equalsIgnoreCase("Inbound")) {
+        OpcodeDefinitions.addInboundOpcode(opcodeHexString, opcodeName);
+      } else {
+        OpcodeDefinitions.addOutboundOpcode(opcodeHexString, opcodeName);
+      }
+      setOpcodeNameAt(editedPacket.getOpcode(), value);
+    }
   }
     
   /**

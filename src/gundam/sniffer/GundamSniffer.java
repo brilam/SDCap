@@ -7,8 +7,6 @@ import gundam.sniffer.packets.GundamPacketFactory;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import org.pcap4j.core.BpfProgram.BpfCompileMode;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PacketListener;

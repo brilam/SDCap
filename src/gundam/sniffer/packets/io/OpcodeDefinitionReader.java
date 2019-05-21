@@ -18,6 +18,15 @@ public class OpcodeDefinitionReader {
   }
   
   /**
+   * Returns whether or not the opcode definitions file exists.
+   * @return whether or not the opcode definitions file exists
+   */
+  public static boolean isDefinitionFileExists() {
+    File file = new File(OpcodeDefinitionConstants.DEFINITIONS_FILE_NAME);
+    return file.exists();
+  }
+  
+  /**
    * Loads the opcode definitions file.
    * @throws IOException if there is any issue reading the file
    */

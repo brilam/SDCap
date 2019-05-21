@@ -5,7 +5,7 @@ import java.util.List;
 import org.pcap4j.core.PcapNetworkInterface;
 
 /**
- * This class is used to output Pcap4j relevant information. 
+ * This class is used to output Pcap4j relevant information for CLI mode. 
  * @author Brian
  */
 public class Pcap4jOutputter {
