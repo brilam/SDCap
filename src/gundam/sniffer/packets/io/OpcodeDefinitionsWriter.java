@@ -51,7 +51,7 @@ public class OpcodeDefinitionsWriter {
         writer.name(opcodeVal).value(OpcodeDefinitions.getInboundOpcodes().get(opcodeVal));
       }
     } else {
-      for (String opcodeVal : OpcodeDefinitions.getInboundOpcodes().keySet()) {
+      for (String opcodeVal : OpcodeDefinitions.getOutboundOpcodes().keySet()) {
         writer.name(opcodeVal).value(OpcodeDefinitions.getOutboundOpcodes().get(opcodeVal));
       }
     }

@@ -63,9 +63,9 @@ public class GundamPacketTableModel extends DefaultTableModel {
       String opcodeHexString =  editedPacket.getOpcodeAsString();
 
       if (editedPacket.getDirection().equalsIgnoreCase("Inbound")) {
-        OpcodeDefinitions.addInboundOpcode(opcodeHexString, opcodeName);
+        OpcodeDefinitions.addInboundOpcode("0x" + opcodeHexString, opcodeName);
       } else {
-        OpcodeDefinitions.addOutboundOpcode(opcodeHexString, opcodeName);
+        OpcodeDefinitions.addOutboundOpcode("0x" + opcodeHexString, opcodeName);
       }
       setOpcodeNameAt(editedPacket.getOpcode(), value);
     }

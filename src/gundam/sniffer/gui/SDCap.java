@@ -3,8 +3,10 @@ package gundam.sniffer.gui;
 import gundam.sniffer.GundamSniffer;
 import gundam.sniffer.config.SniffingConfiguration;
 import gundam.sniffer.packets.GundamPacket;
-import gundam.sniffer.packets.HexTool;
-import java.awt.event.MouseAdapter;
+import gundam.sniffer.packets.OpcodeDefinitions;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,8 +20,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import com.sun.glass.events.MouseEvent;
 
 public class SDCap {
 
@@ -133,5 +133,16 @@ public class SDCap {
     JLabel lblPacketData = new JLabel("Packet Data");
     lblPacketData.setBounds(10, 251, 58, 20);
     frame.getContentPane().add(lblPacketData);
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent arg0) {
+        // Save packet definitions on closing
+        try {
+          OpcodeDefinitions.exportPacketDefinitions();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 }
