@@ -34,3 +34,6 @@ Bugs are inevitable in software, and as development goes further and further, we
    - [Checkstyle plugin](https://checkstyle.org/eclipse-cs/#!/) for checking if your code adheres to Google's style guide (which is checkstyle)
    - [Google's Style Formatter for Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml) for formatting your code to adhere to Google's style guide (which is checkstyle).
 4) Send a pull request from your branch.
+
+# Acknowledgements
+- [Multiply/Taka-sab](https://github.com/Taka-sab) for sharing that packet length is indicated in the packet along with the static "F0 03"
