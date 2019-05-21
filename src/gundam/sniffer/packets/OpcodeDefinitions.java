@@ -1,5 +1,8 @@
 package gundam.sniffer.packets;
 
+import gundam.sniffer.packets.io.OpcodeDefinitionReader;
+import gundam.sniffer.packets.io.OpcodeDefinitionsWriter;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,11 +56,11 @@ public final class OpcodeDefinitions {
   }
   
   public static void loadPacketDefinitions() throws IOException {
-    OpcodeDefinitionIO.loadFromFile();
+    OpcodeDefinitionReader.loadFromFile();
   }
   
   public static void exportPacketDefinitions() throws IOException {
-    OpcodeDefinitionIO.writeToFile();
+    OpcodeDefinitionsWriter.writeToFile();
   }
   
   /**
