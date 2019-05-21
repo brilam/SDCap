@@ -8,17 +8,20 @@ the now defunct game with many equally enthusiastic fans. Soon after, I realized
 # Why SDCap over a generic packet sniffer such as Wireshark?
 SDCap is designed specifically for SD Gundam Online and therefore, identifies information only particular to SD Gundam Online. See the features below for more information.
 
-# Features
+# Current Features
 - Displaying of packet information only relevant to SD Gundam Online (this means there is no Ethernet header, IPv4 header, or TCP header)
 - Naming of opcodes which are saved for every sniffing session to make identification of packets easier
 - Loading of opcode definitions so that every sniffing session will contain your previously named opcodes
+
+# Features Coming Soon
 - Saving of sniffing sessions for further packet analysis
 - Reloading of sniffing sessions for packet analysis
+- Listing of opcodes and a way to navigate to find a particular opcode within the packet log
 
 # How to use
 ## Dependencies
-SDCap uses pcap4j 1.7.7 and as such has the same requirements. To emphasize the most important requirements here, you will need a version of Java between Java 6.0 to Java 8.0. Java 9.0+ is not supported by pcap4j 1.7.7. In the future, SDCap will likely be updated once pcap4j 2.0 has reached its stable release.
-Aside from this, you will need a pcap library. You may use WinPcap or Npcap on Windows, and libpcap if you are on *nix based system (ie. Linux or Mac OS). Other than that, the dependencies of pcap4j are all included in the pom.xml file. You will need Maven to compile this project. I will presume that you have prerequisite knowledge on Maven.
+SDCap uses pcap4j 1.7.7 and as such has the same requirements. It also uses gson. To emphasize the most important requirements here, you will need a version of Java between Java 6.0 to Java 8.0. Java 9.0+ is not supported by pcap4j 1.7.7. In the future, SDCap will likely be updated once pcap4j 2.0 has reached its stable release.
+Aside from this, you will need a pcap library. You may use WinPcap or Npcap on Windows, and libpcap if you are on *nix based system (ie. Linux or Mac OS). Other than that, the dependencies of pcap4j, and gson are all included in the pom.xml file. You will need Maven to compile this project. I will presume that you have prerequisite knowledge on Maven.
 
 # Contributions
 Bugs are inevitable in software, and as development goes further and further, we'll discover more about SD Gundam Online. Any contributions are welcome (bug fixes, enhancements, etc). Here are some steps to contributions:
