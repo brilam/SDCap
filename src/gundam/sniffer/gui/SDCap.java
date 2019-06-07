@@ -26,6 +26,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -38,6 +39,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class SDCap {
 
@@ -154,12 +156,23 @@ public class SDCap {
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent arg0) {
-        // Save packet definitions on closing
-        try {
-          OpcodeDefinitions.exportPacketDefinitions();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        // Spawn a thread to save packet definitions on closing
+        Thread thread = new Thread() {
+          public void run() {
+            try {
+              OpcodeDefinitions.exportPacketDefinitions();
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        };
+        thread.start();
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Pcap File", "pcap");
+        // Disable All files and set file filter to pcap
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileFilter(filter);
+        int retVal = fileChooser.showSaveDialog(frame);
       }
     });
   }
